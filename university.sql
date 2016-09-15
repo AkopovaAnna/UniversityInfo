@@ -2,7 +2,8 @@
 SQLyog Community v11.52 (64 bit)
 MySQL - 5.6.28-0ubuntu0.14.04.1 : Database - UniversityInfo
 *********************************************************************
-*/
+*/
+
 
 /*!40101 SET NAMES utf8 */;
 
