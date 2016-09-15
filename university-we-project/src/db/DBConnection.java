@@ -1,7 +1,9 @@
 package db;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.sql.Connection;
+import java.sql.Driver;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Properties;
@@ -26,15 +28,17 @@ public class DBConnection {
         return provider;
     }
 
-	public Connection getConnection() throws SQLException {
+	public static Connection getConnection() throws ClassNotFoundException, SQLException {
 		if (dbConnection != null) {
 			return dbConnection;
 		} else {
 			
-//				InputStream inputStream = DBConnection.class.getClassLoader().getResourceAsStream("UniveristyInfo/src/db/db.properties");
+//				InputStream inputStream = DBConnection.class.getClassLoader().getResourceAsStream("db.properties");
 //				Properties properties = new Properties();
 //				if (properties != null) {
-//					properties.load(inputStream);
+
+						
+					
 					
 					String dbDriver = "com.mysql.jdbc.Driver"; //properties.getProperty("dbDriver");
 					String connectionUrl = "jdbc:mysql://localhost:3306/UniversityInfo";// properties.getProperty("connectionUrl");
@@ -43,16 +47,24 @@ public class DBConnection {
 					// This will load the MySQL driver, each DB has its own
 					// driver
 				
-					try {
-						Class.forName(dbDriver).newInstance();
-						dbConnection = DriverManager.getConnection(connectionUrl, userName, password);
-					} catch (InstantiationException | IllegalAccessException | ClassNotFoundException e) {
-						logger.error("error with loading driver", e);
-					}
+
+//						properties.load(inputStream);
+						try {
+							Driver driver = (Driver) Class.forName(dbDriver).newInstance();
+							DriverManager.registerDriver(driver);
+							dbConnection = DriverManager.getConnection(connectionUrl, userName, password);
+							System.out.println("connect");
+						} catch (InstantiationException | IllegalAccessException e) {
+							// TODO Auto-generated catch block
+							logger.error(e);
+							throw new IllegalArgumentException(e);
+						}
+						System.out.println("connect2");
+					
 		 
 					// DriverManager.registerDriver(driver);
 					// Setup the connection with the DB
-					
+//				}
 			return dbConnection;
 		}
 	}
